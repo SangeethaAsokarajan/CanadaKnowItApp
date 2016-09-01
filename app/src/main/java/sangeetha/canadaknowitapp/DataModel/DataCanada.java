@@ -1,4 +1,4 @@
-package sangeetha.canadaknowitapp.DataModel;
+package sangeetha.canadaknowitapp.dataModel;
 
 /**
  * Created by Sangeetha on 9/1/2016.

@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import sangeetha.canadaknowitapp.DataModel.DataCanada;
+import sangeetha.canadaknowitapp.dataModel.DataCanada;
 import sangeetha.canadaknowitapp.R;
 import sangeetha.canadaknowitapp.adapter.RecyclerViewAdapter;
 
@@ -65,10 +65,10 @@ public class HomeActivity extends Activity {
                 int statusCode = urlConnection.getResponseCode();
                 /* 200 represents HTTP OK */
                 if (statusCode ==  200) {
-                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder response = new StringBuilder();
                     String line;
-                    while ((line = r.readLine()) != null) {
+                    while ((line = bufferedReader.readLine()) != null) {
                         response.append(line);
                     }
                     parseResult(response.toString());

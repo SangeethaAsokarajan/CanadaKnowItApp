@@ -19,6 +19,7 @@ import java.util.List;
 import sangeetha.canadaknowitapp.dataModel.DataCanada;
 import sangeetha.canadaknowitapp.R;
 import sangeetha.canadaknowitapp.adapter.RecyclerViewAdapter;
+import sangeetha.canadaknowitapp.divider.MyItemDecoration;
 
 /**
  * Created by Sangeetha on 8/30/2016.
@@ -38,6 +39,8 @@ public class HomeActivity extends Activity {
         /* Initialize recyclerview for display the list of information */
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //Add MyItemDecoration
+        mRecyclerView.addItemDecoration(new MyItemDecoration());
 
         /*Downloading data from below url*/
         final String url = "https://dl.dropboxusercontent.com/u/746330/facts.json";
@@ -106,9 +109,9 @@ public class HomeActivity extends Activity {
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 DataCanada item = new DataCanada();
-                item.setTitle(post.optString("title"));
-                item.setDescription(post.optString("description"));
-                item.setThumbnail(post.optString("imageHref"));
+                item.setTitle(post.optString("title").trim());
+                item.setDescription(post.optString("description").trim());
+                item.setThumbnail(post.optString("imageHref").trim());
                 rowItemList.add(item);
             }
         } catch (JSONException e) {

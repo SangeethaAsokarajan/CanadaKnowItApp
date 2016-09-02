@@ -1,14 +1,17 @@
 package sangeetha.canadaknowitapp.view;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,29 +19,34 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import sangeetha.canadaknowitapp.dataModel.DataCanada;
+
 import sangeetha.canadaknowitapp.R;
 import sangeetha.canadaknowitapp.adapter.RecyclerViewAdapter;
+import sangeetha.canadaknowitapp.dataModel.DataCanada;
 import sangeetha.canadaknowitapp.divider.MyItemDecoration;
 
 /**
  * Created by Sangeetha on 8/30/2016.
  */
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
     private List<DataCanada> rowItemList;
+    private ActionBar actionBar;
+    private String title="";
     private static final String TAG = "CanadaKnowItHomePage";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        actionBar = getSupportActionBar();
 
         /* Initialize recyclerview for display the list of information */
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         //Add MyItemDecoration
         mRecyclerView.addItemDecoration(new MyItemDecoration());
 
@@ -52,6 +60,7 @@ public class HomeActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
+            actionBar.setTitle(title);
         }
         @Override
         protected Integer doInBackground(String... params) {
@@ -91,7 +100,7 @@ public class HomeActivity extends Activity {
             if (result == 1) {
                 adapter = new RecyclerViewAdapter(HomeActivity.this, rowItemList);
                 mRecyclerView.setAdapter(adapter);
-
+                actionBar.setTitle(title);
             } else {
                 Log.e(TAG, "Failed to fetch data!");
             }
@@ -101,6 +110,7 @@ public class HomeActivity extends Activity {
     private void parseResult(String result) {
         try {
             JSONObject response = new JSONObject(result);
+            title=response.optString("title");
             JSONArray posts = response.optJSONArray("rows");
             /*Initialize array if null*/
             if (null == rowItemList) {

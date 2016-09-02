@@ -2,6 +2,8 @@ package sangeetha.canadaknowitapp.view;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,8 +35,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter adapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<DataCanada> rowItemList;
     private ActionBar actionBar;
+    private final String url = "https://dl.dropboxusercontent.com/u/746330/facts.json";
     private String title="";
     private static final String TAG = "CanadaKnowItHomePage";
     @Override
@@ -47,12 +51,22 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //Add MyItemDecoration
+        /* Initialize SwipeRefreshLayout to refresh the data in the recyclerview on a swipe gesture */
+        mSwipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
+
+        //* Add MyItemDecoration for making divider  in the recycler view
         mRecyclerView.addItemDecoration(new MyItemDecoration());
 
         /*Downloading data from below url*/
-        final String url = "https://dl.dropboxusercontent.com/u/746330/facts.json";
         new AsyncHttpTask().execute(url);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshItems();
+            }
+        });
     }
 
     /* This inner class is used to parse the JSON Data from the URL provided above */
@@ -128,5 +142,15 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+ /* This method handles the refresh functionality to refresh the recycler view*/
+    private void refreshItems(){
 
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                new AsyncHttpTask().execute(url);
+            }
+        });
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }
